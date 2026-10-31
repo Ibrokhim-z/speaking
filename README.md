@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SpeakLevel — English Speaking Assessment Platform
 
-## Getting Started
+AI-powered English speaking assessment platform for language schools. Evaluates students using **Speakout 3rd Edition** curriculum levels (A1–C1).
 
-First, run the development server:
+## Features
+
+- 🔐 **Manager Authentication** — Register/login system for managers
+- 📊 **Main Manager Dashboard** — Overview of all managers and their students
+- 📝 **Placement Test** — Grammar/vocabulary test to determine student level
+- 🎤 **Speaking Assessment** — Audio questions with TTS, student answer recording
+- 🤖 **AI Evaluation** — OpenAI Whisper transcription + GPT-4o-mini speaking evaluation
+- 🌐 **Multi-language Feedback** — Results in English, Russian, or Kazakh
+- 📚 **Speakout 3rd Edition Integration** — Level-to-book-to-unit recommendations
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router, TypeScript)
+- **Database**: SQLite via Prisma ORM
+- **Auth**: Custom JWT + bcrypt
+- **AI**: OpenAI API (Whisper + GPT-4o-mini)
+- **Audio**: Web Speech API (TTS) + MediaRecorder API
+
+## Setup
 
 ```bash
+# 1. Install dependencies
+npm install
+
+# 2. Create .env file
+cp .env.example .env
+# Edit .env and add your OpenAI API key (optional)
+
+# 3. Setup database
+npx prisma db push
+npx prisma generate
+
+# 4. Seed default admin account
+npx tsx prisma/seed.ts
+
+# 5. Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env` file:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+DATABASE_URL="file:./dev.db"
+JWT_SECRET="your-secret-key-here"
+OPENAI_API_KEY="sk-..."  # Optional — needed for AI evaluation
+```
 
-## Learn More
+## Default Accounts
 
-To learn more about Next.js, take a look at the following resources:
+After seeding:
+- **Main Manager**: username `admin`, password `admin123`
+- **Managers**: Register through the app
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Speakout 3rd Edition Levels
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Level | Book | Description |
+|---|---|---|
+| A1 | Starter | Beginner |
+| A2 | Elementary | Elementary |
+| A2+ | Pre-Intermediate | Pre-Intermediate |
+| B1 | Intermediate | Intermediate |
+| B1+ | Intermediate Plus | Intermediate Plus |
+| B2 | Upper-Intermediate | Upper-Intermediate |
+| C1 | Advanced | Advanced |
 
-## Deploy on Vercel
+## How It Works
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Manager registers/logs in**
+2. **Adds a new student**
+3. **Student takes placement test** → System detects grammar level
+4. **Student does speaking assessment** → Questions read aloud via TTS, answers recorded
+5. **AI evaluates** → Transcribes audio, assesses speaking skills, recommends book/unit
+6. **Results saved** → Visible to both manager and main manager
